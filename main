@@ -7,16 +7,31 @@ personnel_info = {}
 def load():
     _store_file = open('store.json', 'r')
     data = _store_file.read()
-    print(data)
     if data == '':
         data = '''{
             "data": []
         }'''
+        print('还没有数据哦！')
+    else:
+        data1 = json.loads(data);
+        row = data1['data']
+        if len(row) == 0:
+            print('还没有数据哦！')
+        for i,person in enumerate(row):
+            if i == 0:
+                s = 'identifier\t'
+                for k, v in person.items():
+                    s += k + '\t'
+                print(s)
+            s1 = str(i) + '\t\t'
+            for k, v in person.items():
+                s1 += v + '\t'
+            print(s1)
     global personnel_info
     personnel_info = json.loads(str(data))
     _store_file.close()
 
-
+    
 def save():
     global personnel_info
     data = json.dumps(personnel_info)
@@ -24,7 +39,7 @@ def save():
     _store_file.write(data)
     _store_file.close()
 
-
+    
 def edit():
     name = input('input name to edit')
     global personnel_info
@@ -47,7 +62,7 @@ def edit():
             return
     print("can't find person with name %s" % name)
 
-
+    
 def add():
     name = input('input name: ')
     age = input('input age: ')
@@ -64,9 +79,9 @@ def add():
     global personnel_info
     personnel_info['data'].append(person)
 
-
+    
 def delete():
-    name = input("input name to delete")
+    name = input("input name to delete: ")
     global personnel_info
     for person in personnel_info["data"]:
         if person['name'] == name:
@@ -79,21 +94,28 @@ def find():
     name = input('input name to find: ')
     for person in personnel_info['data']:
         if person['name'] == name:
-            print(person)
+            s = '\t'
+            for k, v in person.items():
+                s += k + '\t'
+            print(s)
+            s1 = str('') + '\t'
+            for k, v in person.items():
+                s1 += v + '\t'
+            print(s1)
             return
     print("can't find name: %s" % name)
 
-
+    
 def help():
     print("command: add | print | find | exit |save |delete")
 
-
+    
 def print_info():
     global personnel_info
     data = json.dumps(personnel_info, indent=4)
     print(data)
 
-
+    
 if __name__ == '__main__':
     load()
     help()
